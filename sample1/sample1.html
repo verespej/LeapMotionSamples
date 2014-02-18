@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Leap Sample 1</title>
+	<title>Leap Sample 1</title>
 	<link rel='stylesheet' type='text/css' href='style.css' />
 </head>
 <body>
@@ -17,32 +17,32 @@
 			if (typeof(Leap) === 'undefined') {
 				$('#display').html('Leap JS client library, leap.js, not found');
 				alert('Leap JS client library, leap.js, not found.');
-			}
-		});
+			} else {
+				// Note: Leap produces frames faster than the browser can 
+				// utilize them, so while it is possible to get them all, 
+				// we will only receive frames on repaint here (Leap.loop 
+				// uses requestAnimationFrame).
+				var lmOptions = { enableGestures: true };
+				Leap.loop(lmOptions, function(frame) {
+					var displayMsg = 'No hands detected';
+					if (frame.hands.length > 0) {
+						displayMsg = 'Hand(s) detected<br />';
+						for (var i = 0; i < frame.hands.length; i++) {
+							var hand = frame.hands[i];
+							var heightMm = Math.round(hand.palmPosition[1]);
+							var heightIn = Math.round(heightMm / 25.4);
+							var heightFt = Math.round(heightMm / 304.8);
 
-		// Note: Leap produces frames faster than the browser can 
-		// utilize them, so while it is possible to get them all, 
-		// we will only receive frames on repaint here (Leap.loop 
-		// uses requestAnimationFrame).
-		var lmOptions = { enableGestures: true };
-		Leap.loop(lmOptions, function(frame) {
-			var displayMsg = 'No hands detected';
-			if (frame.hands.length > 0) {
-				displayMsg = 'Hand(s) detected<br />';
-			  for (var i = 0; i < frame.hands.length; i++) {
-					var hand = frame.hands[i];
-					var heightMm = Math.round(hand.palmPosition[1]);
-					var heightIn = Math.round(heightMm / 25.4);
-					var heightFt = Math.round(heightMm / 304.8);
-
-				  displayMsg += '<br />Hand ' + i + '<br />';
-					displayMsg += 'Height: ' + heightMm + 'mm / ' 
-						+ heightIn + 'in / ' 
-						+ heightFt + 'ft';
-					displayMsg += '<br />';
-				}
+							displayMsg += '<br />Hand ' + i + '<br />';
+							displayMsg += 'Height: ' + heightMm + 'mm / ' 
+								+ heightIn + 'in / ' 
+								+ heightFt + 'ft';
+							displayMsg += '<br />';
+						}
+					}
+					$('#display').html(displayMsg);
+				});
 			}
-			$('#display').html(displayMsg);
 		});
 	</script>
 </body>
